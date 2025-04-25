@@ -13,6 +13,7 @@ class DBHelper {
 
   Future<Database> initDb() async {
     final path = join(await getDatabasesPath(), 'multiplication_table.db');
+    // print('Initializing database at $path'); // Commented out
     return await openDatabase(
       path,
       version: 1,
@@ -29,6 +30,7 @@ class DBHelper {
             answers TEXT
           )
         ''');
+        // print('Database created'); // Commented out
       },
     );
   }
@@ -36,6 +38,7 @@ class DBHelper {
   Future<void> insertTestResult(TestResult result) async {
     final db = await database;
     await db.insert('test_results', result.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    // print('Inserted test result: ${result.toMap()}'); // Commented out
   }
 
   Future<List<TestResult>> getTestResults() async {

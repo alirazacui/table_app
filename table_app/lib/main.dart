@@ -3,11 +3,8 @@ import 'package:provider/provider.dart';
 import 'providers/quiz_provider.dart';
 import 'providers/settings_provider.dart';
 import 'screens/home_screen.dart';
-import 'services/db_helper.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await DBHelper().initDb();
+void main() {
   runApp(const MultiplicationTableApp());
 }
 

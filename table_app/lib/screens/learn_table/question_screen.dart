@@ -91,7 +91,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             ],
           ),
         );
-        if (shouldExit ?? false) {
+        if (shouldExit ?? false && context.mounted) {
           Navigator.pop(context);
         }
       },
@@ -105,8 +105,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('Exit Quiz?'),
-                  content:
-                      const Text('Your progress will be lost. Are you sure?'),
+                  content: const Text('Your progress will be lost. Are you sure?'),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
@@ -119,7 +118,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                   ],
                 ),
               );
-              if (shouldExit ?? false) {
+              if (shouldExit ?? false && context.mounted) {
                 Navigator.pop(context);
               }
             },
@@ -135,8 +134,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                       : animationStep == 1
                           ? 'Set'
                           : 'Go!',
-                  style: const TextStyle(
-                      fontSize: 48, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                 ).animate().fadeIn(duration: 800.ms).scale(),
               );
             }
@@ -149,8 +147,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
               );
             }
 
-            final question =
-                quizProvider.questions[quizProvider.currentQuestionIndex];
+            final question = quizProvider.questions[quizProvider.currentQuestionIndex];
 
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -165,11 +162,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                   const SizedBox(height: 20),
                   Text(
                     question.text,
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  if (quizProvider.showCorrectAnswer &&
-                      question.type == QuestionType.trueFalse)
+                  if (quizProvider.showCorrectAnswer && question.type == QuestionType.trueFalse)
                     Text(
                       '${question.text} = ${question.correctAnswer}',
                       style: const TextStyle(fontSize: 18, color: Colors.green),

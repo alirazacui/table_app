@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/question.dart';
-import '../models/test_result.dart';
-import '../services/db_helper.dart';
 import '../utils/data_generator.dart';
+import '../screens/result_summary_screen.dart';
 
 class QuizProvider with ChangeNotifier {
   List<Question> questions = [];
@@ -15,6 +14,7 @@ class QuizProvider with ChangeNotifier {
   bool showAnswers = false;
   List<Map<String, String>> userAnswers = [];
   QuestionType currentQuestionType = QuestionType.multipleChoice;
+  bool quizCompleted = false;
 
   void initializeQuiz({
     int? tableNumber,
@@ -40,6 +40,7 @@ class QuizProvider with ChangeNotifier {
     showCorrectAnswer = false;
     userAnswers = [];
     currentQuestionType = questionType;
+    quizCompleted = false;
     notifyListeners();
   }
 
@@ -69,13 +70,16 @@ class QuizProvider with ChangeNotifier {
     inputAnswer = '';
     showCorrectAnswer = false;
     userAnswers = [];
+    quizCompleted = false;
     notifyListeners();
   }
 
   void answerQuestion(String answer, BuildContext context) async {
     if (!context.mounted) return;
+
     final question = questions[currentQuestionIndex];
     final isCorrect = answer == question.correctAnswer;
+
     userAnswers.add({
       'question': question.text,
       'correct': question.correctAnswer,
@@ -94,23 +98,27 @@ class QuizProvider with ChangeNotifier {
 
     await Future.delayed(const Duration(seconds: 1));
 
-    if (currentQuestionIndex < 9) {
+    if (!context.mounted) return;
+
+    if (currentQuestionIndex < questions.length - 1) {
       currentQuestionIndex++;
       selectedAnswer = null;
       showCorrectAnswer = false;
       inputAnswer = '';
       notifyListeners();
     } else {
-      final result = TestResult(
-        completedTests: 1,
-        accuracy: correctAnswers / (correctAnswers + wrongAnswers) * 100,
-        correctAnswers: correctAnswers,
-        wrongAnswers: wrongAnswers,
-        complexity: questionTypeToComplexity(question.type),
-        timestamp: DateTime.now(),
-        answers: userAnswers,
+      quizCompleted = true;
+      notifyListeners();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultSummaryScreen(
+            correctAnswers: correctAnswers,
+            wrongAnswers: wrongAnswers,
+            answers: userAnswers,
+          ),
+        ),
       );
-      await DBHelper().insertTestResult(result);
     }
   }
 

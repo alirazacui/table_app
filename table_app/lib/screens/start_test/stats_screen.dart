@@ -31,6 +31,7 @@ class _StatsScreenState extends State<StatsScreen> {
       accuracy = correctAnswers + wrongAnswers > 0
           ? (correctAnswers / (correctAnswers + wrongAnswers) * 100).roundToDouble()
           : 0.0;
+      // print('Stats loaded: $completedTests tests, $accuracy% accuracy'); // Commented out
     });
   }
 
